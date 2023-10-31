@@ -12,8 +12,8 @@ if (defined('WP_CLI') && WP_CLI) {
 
 class ClicksReportCommand {
     public function __invoke($args) {
-        $data = !empty($args) ? $args[0] : date('Y-m-d');
-        $report = new ClicksRegistrationReport($data);
+        $date = !empty($args) ? $args[0] : date('Y-m-d');
+        $report = new ClicksRegistrationReport($date);
         try {
             $report->printReport();
         } catch (Exception $e) {
@@ -23,32 +23,32 @@ class ClicksReportCommand {
 }
 
 class ClicksRegistrationReport {
-    private $data;
+    private $date;
 
-    public function __construct($data) {
-        $this->data = $data;
+    public function __construct($date) {
+        $this->date = $date;
     }
 
     public function printReport() {
         global $wpdb;
 
-        $data_inicio = $this->data . ' 00:00:00';
-        $data_fim = $this->data . ' 23:59:59';
+        $initial_date = $this->date . ' 00:00:00';
+        $end_date = $this->date . ' 23:59:59';
 
         $results = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM wp_click_records WHERE date_record BETWEEN %s AND %s", $data_inicio, $data_fim),
+            $wpdb->prepare("SELECT * FROM wp_click_records WHERE date_record BETWEEN %s AND %s", $initial_date, $end_date),
             ARRAY_A
         );
 
         if (empty($results)) {
-            throw new Exception("Nenhum registro encontrado para a data $this->data.");
+            throw new Exception("Nenhum registro encontrado para a date $this->date.");
         }
 
         $total = $wpdb->get_var(
-            $wpdb->prepare("SELECT COUNT(*) FROM wp_click_records WHERE date_record BETWEEN %s AND %s", $data_inicio, $data_fim)
+            $wpdb->prepare("SELECT COUNT(*) FROM wp_click_records WHERE date_record BETWEEN %s AND %s", $initial_date, $end_date)
         );
 
-        WP_CLI::success("Registros de cliques para o dia $this->data:");
+        WP_CLI::success("Registros de cliques para o dia $this->date:");
         foreach ($results as $result) {
             WP_CLI::line("Data: " . $result['date_record']);
         }
