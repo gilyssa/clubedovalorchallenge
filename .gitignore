@@ -1,0 +1,13 @@
+wp-config.php
+wp-config-*.php
+wp-content/cache/
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+*.swp
+.DS_Store
+vendor/
+node_modules/
+.env
+wp-content/cache/plugins/
