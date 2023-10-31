@@ -13,6 +13,11 @@
  *
  * @since 2.1.0
  */
+
+ function my_debug_function($message) {
+    error_log($message);
+}
+
 define( 'DOING_AJAX', true );
 if ( ! defined( 'WP_ADMIN' ) ) {
 	define( 'WP_ADMIN', true );
